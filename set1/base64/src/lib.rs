@@ -1,5 +1,3 @@
-use std::str;
-
 const ALPHABET: [u8; 65] = [
     b'A', b'B', b'C', b'D', b'E', b'F', b'G', b'H', b'I', b'J', b'K', b'L', b'M', b'N', b'O', b'P',
     b'Q', b'R', b'S', b'T', b'U', b'V', b'W', b'X', b'Y', b'Z', b'a', b'b', b'c', b'd', b'e', b'f',
@@ -41,7 +39,7 @@ fn process_full_group(octets: &[u8], result: &mut Vec<u8>) {
 // https://datatracker.ietf.org/doc/html/rfc4648
 // encode returns a base64 encoding of the given str
 // according to RFC-4648
-pub fn encode_from_raw_bytes(bytes: &[u8]) -> String {
+pub fn encode_from_raw_bytes(bytes: &[u8]) -> Vec<u8> {
     let length = bytes.len();
     let mut result: Vec<u8> = Vec::with_capacity(length);
 
@@ -74,16 +72,10 @@ pub fn encode_from_raw_bytes(bytes: &[u8]) -> String {
         result.push(ALPHABET[64]);
     }
 
-    let result_str = match str::from_utf8(&result) {
-        Ok(v) => v,
-        Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
-    }
-    .to_owned();
-
-    return result_str;
+    return result
 }
 
-pub fn encode_from_hex(value: &[u8]) -> String {
+pub fn encode_from_hex(value: &[u8]) -> Vec<u8> {
     let bytes: &[u8] = &custom_hex::decode(value).unwrap()[..];
     return encode_from_raw_bytes(bytes);
 }
@@ -155,86 +147,86 @@ mod tests {
 
     #[test]
     fn encode_from_raw_bytes_empty() {
-        const EXPECTED_OUTPUT: &str = "";
+        const EXPECTED_OUTPUT: &[u8] = b"";
         let input: &[u8] = b"";
 
         let actual_output = encode_from_raw_bytes(input);
-        assert_eq!(EXPECTED_OUTPUT, actual_output);
+        assert_eq!(EXPECTED_OUTPUT, &actual_output);
     }
 
     #[test]
     fn encode_from_raw_bytes_f() {
-        const EXPECTED_OUTPUT: &str = "Zg==";
+        const EXPECTED_OUTPUT: &[u8] = b"Zg==";
         let input: &[u8] = b"f";
 
         let actual_output = encode_from_raw_bytes(input);
-        assert_eq!(EXPECTED_OUTPUT, actual_output);
+        assert_eq!(EXPECTED_OUTPUT, &actual_output);
     }
 
     #[test]
     fn encode_from_raw_bytes_fo() {
-        const EXPECTED_OUTPUT: &str = "Zm8=";
+        const EXPECTED_OUTPUT: &[u8] = b"Zm8=";
         let input: &[u8] = b"fo";
 
         let actual_output = encode_from_raw_bytes(input);
-        assert_eq!(EXPECTED_OUTPUT, actual_output);
+        assert_eq!(EXPECTED_OUTPUT, &actual_output);
     }
 
     #[test]
     fn encode_from_raw_bytes_foo() {
-        const EXPECTED_OUTPUT: &str = "Zm9v";
+        const EXPECTED_OUTPUT: &[u8] = b"Zm9v";
         let input: &[u8] = b"foo";
 
         let actual_output = encode_from_raw_bytes(input);
-        assert_eq!(EXPECTED_OUTPUT, actual_output);
+        assert_eq!(EXPECTED_OUTPUT, &actual_output);
     }
 
     #[test]
     fn encode_from_raw_bytes_foob() {
-        const EXPECTED_OUTPUT: &str = "Zm9vYg==";
+        const EXPECTED_OUTPUT: &[u8] = b"Zm9vYg==";
         let input: &[u8] = b"foob";
 
         let actual_output = encode_from_raw_bytes(input);
-        assert_eq!(EXPECTED_OUTPUT, actual_output);
+        assert_eq!(EXPECTED_OUTPUT, &actual_output);
     }
 
     #[test]
     fn encode_from_raw_bytes_fooba() {
-        const EXPECTED_OUTPUT: &str = "Zm9vYmE=";
+        const EXPECTED_OUTPUT: &[u8] = b"Zm9vYmE=";
         let input: &[u8] = b"fooba";
 
         let actual_output = encode_from_raw_bytes(input);
-        assert_eq!(EXPECTED_OUTPUT, actual_output);
+        assert_eq!(EXPECTED_OUTPUT, &actual_output);
     }
 
     #[test]
     fn encode_from_raw_bytes_bar() {
-        const EXPECTED_OUTPUT: &str = "YmFy";
+        const EXPECTED_OUTPUT: &[u8] = b"YmFy";
         let input: &[u8] = b"bar";
 
         let actual_output = encode_from_raw_bytes(input);
-        assert_eq!(EXPECTED_OUTPUT, actual_output);
+        assert_eq!(EXPECTED_OUTPUT, &actual_output);
     }
 
     #[test]
     fn encode_from_raw_bytes_foobar() {
-        const EXPECTED_OUTPUT: &str = "Zm9vYmFy";
+        const EXPECTED_OUTPUT: &[u8] = b"Zm9vYmFy";
         let input: &[u8] = b"foobar";
 
         let actual_output = encode_from_raw_bytes(input);
-        assert_eq!(EXPECTED_OUTPUT, actual_output);
+        assert_eq!(EXPECTED_OUTPUT, &actual_output);
     }
 
     #[test]
     fn encode_from_raw_bytes_cryptopals() {
-        const EXPECTED_OUTPUT: &str =
-            "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
+        const EXPECTED_OUTPUT: &[u8] =
+            b"SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
         let input: &[u8] = b"49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
 
         let binary_input = hex::decode(input).unwrap();
 
         let actual_output = encode_from_raw_bytes(&binary_input);
-        assert_eq!(EXPECTED_OUTPUT, actual_output);
+        assert_eq!(EXPECTED_OUTPUT, &actual_output);
     }
 
     fn process_group_helper(input: &str, expected_output: &str) {
@@ -254,11 +246,11 @@ mod tests {
 
     #[test]
     fn encode_from_hex_works_cryptopals() {
-        let expected_output: String = String::from("SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t");
+        let expected_output: &[u8] = b"SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
         let input: &[u8] = b"49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
 
         let actual = encode_from_hex(input);
 
-        assert_eq!(expected_output, actual);
+        assert_eq!(expected_output, &actual);
     }
 }
