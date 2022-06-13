@@ -1,6 +1,5 @@
 
 use custom_hex;
-use std::str;
 
 // xor performs a binary xor of byte_a and byte_b
 // xor is defined as follows:
@@ -20,7 +19,9 @@ pub fn compute(hex_a: &[u8], hex_b: &[u8]) -> Result<Vec<u8>, String> {
 
     let mut result: Vec<u8> = Vec::with_capacity(bytes_a.len());
     for i in 0..bytes_a.len() {
-        result.push(xor(bytes_a[i], bytes_b[i]))
+        let new_byte = xor(bytes_a[i], bytes_b[i]);
+        result.push(custom_hex::encode_byte(new_byte >> 4 & 0b1111)?);
+        result.push(custom_hex::encode_byte(new_byte & 0b1111)?);
     }
 
     Ok(result)
@@ -38,7 +39,7 @@ mod tests {
 
         let actual = compute(hex_a, hex_b).unwrap();
         
-        // assert_eq!(EXPECTED_OUTPUT, &actual);
+        assert_eq!(EXPECTED_OUTPUT, &actual);
     }
 
     #[test]
