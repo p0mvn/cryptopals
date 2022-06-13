@@ -1,4 +1,3 @@
-
 fn decode_digit(c: &u8) -> Result<u8, String> {
     if c >= &b'0' && c <= &b'9' {
         return Ok(c - 48);
@@ -82,3 +81,4 @@ mod tests {
         assert_eq!(&expected_output as &[u8], &actual_output as &[u8]);
     }
 }
+

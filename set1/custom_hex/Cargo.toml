@@ -1,5 +1,5 @@
 [package]
-name = "hextobase64"
+name = "custom_hex"
 version = "0.1.0"
 edition = "2021"
 
