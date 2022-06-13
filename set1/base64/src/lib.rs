@@ -1,5 +1,3 @@
-pub mod base64;
-
 use std::str;
 
 const ALPHABET: [u8; 65] = [
@@ -87,7 +85,7 @@ pub fn encode_from_raw_bytes(bytes: &[u8]) -> String {
 
 pub fn encode_from_hex(value: &[u8]) -> String {
     let bytes: &[u8] = &custom_hex::decode(value).unwrap()[..];
-    return base64::encode_from_raw_bytes(bytes);
+    return encode_from_raw_bytes(bytes);
 }
 
 #[cfg(test)]
