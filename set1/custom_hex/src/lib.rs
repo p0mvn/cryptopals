@@ -33,7 +33,7 @@ pub fn decode(value: &[u8]) -> Result<Vec<u8>, String> {
 pub fn encode_byte(b: u8) -> Result<u8, String> {
     if b <= 9 {
         return Ok(b + 48);
-    } else if b >= 10 && b <= 15  {
+    } else if b >= 10 && b <= 15 {
         return Ok(97 + b - 10);
     }
     return Err(format!("{} does not translate to hex", b));
@@ -191,4 +191,3 @@ mod tests {
         assert_eq!(EXPECTED_OUTPUT, &actual_output);
     }
 }
-
