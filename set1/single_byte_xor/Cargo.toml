@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 fixed_xor = { path = "../fixed_xor" }
+custom_hex = { path = "../custom_hex" }

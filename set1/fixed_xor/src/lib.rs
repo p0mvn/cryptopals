@@ -4,7 +4,7 @@ use custom_hex;
 // xor is defined as follows:
 //  a xor b === (a or b) and !(a and b)
 //          === (a or b) and (!a or !b) by De Morgan's Law.
-fn xor(byte_a: u8, byte_b: u8) -> u8 {
+pub fn xor(byte_a: u8, byte_b: u8) -> u8 {
     return (byte_a | byte_b) & (!byte_a | !byte_b);
 }
 
