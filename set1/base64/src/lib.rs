@@ -72,7 +72,7 @@ pub fn encode(bytes: &[u8]) -> Vec<u8> {
         result.push(ALPHABET[64]);
     }
 
-    return result
+    return result;
 }
 
 pub fn encode_from_hex(value: &[u8]) -> Vec<u8> {
@@ -83,8 +83,8 @@ pub fn encode_from_hex(value: &[u8]) -> Vec<u8> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::str;
     use hex;
+    use std::str;
 
     #[test]
     fn get_first_char_basic() {
@@ -246,7 +246,8 @@ mod tests {
 
     #[test]
     fn encode_from_hex_works_cryptopals() {
-        let expected_output: &[u8] = b"SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
+        let expected_output: &[u8] =
+            b"SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
         let input: &[u8] = b"49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
 
         let actual = encode_from_hex(input);
